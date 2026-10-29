@@ -1,0 +1,23 @@
+{
+  "name": "lkr-inr-converter",
+  "version": "1.0.0",
+  "description": "Lightning-fast bidirectional Sri Lankan Rupee (LKR) to Indian Rupee (INR) currency converter, ready for GitHub and Vercel.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "echo 'Static webapp ready for deployment'"
+  },
+  "keywords": [
+    "currency-converter",
+    "lkr-to-inr",
+    "inr-to-lkr",
+    "sri-lanka",
+    "india",
+    "forex",
+    "vercel",
+    "pwa"
+  ],
+  "author": "",
+  "license": "MIT"
+}

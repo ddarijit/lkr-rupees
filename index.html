@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LKR ⇄ INR Currency Converter | Sri Lankan & Indian Rupee</title>
+  <meta name="description" content="Instant bidirectional currency converter between Sri Lankan Rupee (LKR) and Indian Rupee (INR) with real-time exchange rates, custom rates, and traveler cheat sheet.">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💱</text></svg>">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Bar / Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-flags">
+          <span class="flag-icon" title="Sri Lanka">🇱🇰</span>
+          <span class="flag-divider">⇄</span>
+          <span class="flag-icon" title="India">🇮🇳</span>
+        </div>
+        <div class="brand-text">
+          <h1>RupeeShift</h1>
+          <p class="tagline">Sri Lankan Rupee ⇄ Indian Rupee</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Live Rate Status Pill -->
+        <div class="rate-status-pill" id="rateStatusPill" title="Live exchange rate status">
+          <span class="status-dot"></span>
+          <span class="status-text" id="statusText">Fetching rate...</span>
+        </div>
+
+        <!-- Refresh Button -->
+        <button class="icon-btn" id="refreshBtn" title="Refresh exchange rate" aria-label="Refresh rate">
+          <svg class="icon spin-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+          </svg>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button class="icon-btn" id="themeToggleBtn" title="Toggle Light / Dark mode" aria-label="Toggle theme">
+          <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Converter Card -->
+    <main class="converter-card">
+      <!-- Currency Box 1 (Source) -->
+      <div class="currency-panel" id="sourcePanel">
+        <div class="panel-header">
+          <div class="currency-meta">
+            <span class="currency-flag" id="sourceFlag">🇱🇰</span>
+            <div class="currency-info">
+              <span class="currency-code" id="sourceCode">LKR</span>
+              <span class="currency-name" id="sourceName">Sri Lankan Rupee</span>
+            </div>
+          </div>
+          <button class="text-btn clear-btn" id="clearBtn" title="Clear input">Clear</button>
+        </div>
+
+        <div class="input-container">
+          <span class="symbol-prefix" id="sourceSymbol">Rs.</span>
+          <input 
+            type="text" 
+            id="sourceInput" 
+            inputmode="decimal" 
+            placeholder="0" 
+            autocomplete="off" 
+            spellcheck="false"
+            aria-label="Source amount"
+          />
+        </div>
+
+        <div class="panel-footer">
+          <span class="amount-in-words" id="sourceInWords">Zero Sri Lankan Rupees</span>
+        </div>
+      </div>
+
+      <!-- Swap Divider & Action -->
+      <div class="swap-divider">
+        <div class="divider-line"></div>
+        <button class="swap-button" id="swapBtn" title="Swap currencies (Ctrl+S)" aria-label="Swap currencies">
+          <svg class="swap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 16V4m0 0L3 8m4-4l4 4m6 4v12m0 0l4-4m-4 4l-4-4"/>
+          </svg>
+        </button>
+        <div class="rate-summary-badge" id="rateSummaryBadge" title="Current conversion rate">
+          1 INR = 3.62 LKR
+        </div>
+        <div class="divider-line"></div>
+      </div>
+
+      <!-- Currency Box 2 (Target) -->
+      <div class="currency-panel target-panel" id="targetPanel">
+        <div class="panel-header">
+          <div class="currency-meta">
+            <span class="currency-flag" id="targetFlag">🇮🇳</span>
+            <div class="currency-info">
+              <span class="currency-code" id="targetCode">INR</span>
+              <span class="currency-name" id="targetName">Indian Rupee</span>
+            </div>
+          </div>
+          <button class="text-btn copy-btn" id="copyResultBtn" title="Copy result to clipboard">
+            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span id="copyBtnText">Copy</span>
+          </button>
+        </div>
+
+        <div class="input-container">
+          <span class="symbol-prefix" id="targetSymbol">₹</span>
+          <input 
+            type="text" 
+            id="targetInput" 
+            inputmode="decimal" 
+            placeholder="0" 
+            autocomplete="off" 
+            spellcheck="false"
+            aria-label="Target amount (editable for reverse conversion)"
+          />
+        </div>
+
+        <div class="panel-footer">
+          <span class="amount-in-words" id="targetInWords">Zero Indian Rupees</span>
+        </div>
+      </div>
+
+      <!-- Quick Amount Presets -->
+      <div class="presets-section">
+        <div class="presets-header">
+          <span class="presets-title">Quick Amounts</span>
+          <span class="presets-hint">Tap to add</span>
+        </div>
+        <div class="preset-chips" id="presetChips">
+          <!-- Dynamically populated chips based on active source currency -->
+        </div>
+      </div>
+
+      <!-- Custom Rate & Fee Options Accordion -->
+      <details class="advanced-section" id="advancedSection">
+        <summary class="advanced-summary">
+          <div class="summary-left">
+            <svg class="summary-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span>Rate Customization & Forex Fees</span>
+          </div>
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </summary>
+
+        <div class="advanced-body">
+          <!-- Custom Rate Input -->
+          <div class="setting-group">
+            <div class="setting-label-row">
+              <label for="customRateInput" class="setting-label">Exchange Rate Base (1 INR = ? LKR)</label>
+              <button class="text-btn reset-rate-btn" id="resetRateBtn">Reset to Live</button>
+            </div>
+            <div class="custom-rate-control">
+              <span class="custom-rate-prefix">1 INR =</span>
+              <input type="number" id="customRateInput" step="0.001" min="0.001" placeholder="3.62" />
+              <span class="custom-rate-suffix">LKR</span>
+            </div>
+            <p class="setting-hint" id="rateUpdatedTime">Last updated: Live API</p>
+          </div>
+
+          <!-- Bank / Forex Markup Fee Slider -->
+          <div class="setting-group">
+            <div class="setting-label-row">
+              <label for="feeSlider" class="setting-label">Bank / Card Markup Margin</label>
+              <span class="fee-percentage-badge" id="feePercentageText">0.0%</span>
+            </div>
+            <div class="fee-slider-container">
+              <input type="range" id="feeSlider" min="0" max="5" step="0.25" value="0" />
+              <div class="slider-marks">
+                <span>0% (Interbank)</span>
+                <span>1.5%</span>
+                <span>3.0% (Card Fee)</span>
+                <span>5%</span>
+              </div>
+            </div>
+            <p class="setting-hint">Typical bank debit/credit card international markup is 2.0% - 3.5%.</p>
+          </div>
+        </div>
+      </details>
+    </main>
+
+    <!-- Quick Reference Conversion Table (Cheat Sheet) -->
+    <section class="cheatsheet-section">
+      <div class="section-header">
+        <h2>Quick Reference Cheat Sheet</h2>
+        <p class="section-desc">Common everyday amounts for shopping, dining, and travel</p>
+      </div>
+
+      <div class="table-grid">
+        <!-- LKR to INR Column -->
+        <div class="cheatsheet-card">
+          <div class="cheatsheet-card-title">
+            <span>🇱🇰 Sri Lanka (LKR)</span>
+            <span>➔</span>
+            <span>🇮🇳 India (INR)</span>
+          </div>
+          <table class="cheatsheet-table" id="lkrToInrTable">
+            <thead>
+              <tr>
+                <th>LKR</th>
+                <th class="text-right">INR</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dynamic rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- INR to LKR Column -->
+        <div class="cheatsheet-card">
+          <div class="cheatsheet-card-title">
+            <span>🇮🇳 India (INR)</span>
+            <span>➔</span>
+            <span>🇱🇰 Sri Lanka (LKR)</span>
+          </div>
+          <table class="cheatsheet-table" id="inrToLkrTable">
+            <thead>
+              <tr>
+                <th>INR</th>
+                <th class="text-right">LKR</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dynamic rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Travel & Currency Tips -->
+    <section class="tips-section">
+      <div class="section-header">
+        <h2>Travel & Payment Insights</h2>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <div class="tip-icon">💳</div>
+          <div class="tip-content">
+            <h3>UPI Acceptance in Sri Lanka</h3>
+            <p>Indian UPI (PhonePe, Google Pay, BHIM) is accepted at select retail merchants, hotels, and attractions across Sri Lanka via LankaPay QR.</p>
+          </div>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-icon">💵</div>
+          <div class="tip-content">
+            <h3>Currency Exchange Tips</h3>
+            <p>You will get the most competitive rates at Colombo downtown authorized money changers or city ATMs rather than airport booths.</p>
+          </div>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-icon">⚡</div>
+          <div class="tip-content">
+            <h3>Real-time Dual Conversion</h3>
+            <p>Type in either the top or bottom box to instantly calculate the corresponding value in real-time, or press the swap button anytime.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <p>Built with clean HTML, CSS & JavaScript • Ready for GitHub & Vercel</p>
+        <div class="footer-badges">
+          <span class="badge">100% Client-Side</span>
+          <span class="badge">Offline Capable</span>
+          <span class="badge">Real-Time FX</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toast Alert -->
+  <div class="toast" id="toast" role="alert" aria-live="polite">
+    <span class="toast-icon">✓</span>
+    <span class="toast-message" id="toastMessage">Copied to clipboard!</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
