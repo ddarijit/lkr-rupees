@@ -41,7 +41,7 @@ lkr-inr-converter/
 ├── index.html        # Clean semantic HTML5 with embedded SVG icons
 ├── styles.css        # Modern responsive design tokens (dark/light themes)
 ├── app.js            # Dual conversion logic, live FX API, offline fallback
-├── server.js         # Zero-dependency local development server
+├── dev-server.js     # Zero-dependency local development server
 ├── vercel.json       # Vercel deployment headers and routing config
 ├── package.json      # NPM scripts and project metadata
 ├── manifest.json     # PWA web manifest
@@ -65,7 +65,7 @@ Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 
 ### Option B: Using Node directly
 ```bash
-node server.js
+node dev-server.js
 ```
 
 ### Option C: Direct Browser Opening
